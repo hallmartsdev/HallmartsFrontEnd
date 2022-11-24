@@ -1,0 +1,220 @@
+http://hallmartsapi.herokuapp.com/shop
+
+
+
+import React from 'react'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Container, Flex, HStack, VStack, Stack, Text, Box, Image, Grid, Button } from '@chakra-ui/react'
+
+
+
+//breakpoints 
+
+let spacingOfElementsInOverlay =["0","0","2",'2','2']
+
+let textVariant = {
+  rest: {
+    display: 'block',
+    y: 0,
+  },
+  hover: {
+    y: -4,
+    transition: {
+      duration: '0.1',
+      type:'tween',
+      ease:'easeOut'
+    }
+  }
+}
+
+
+
+let buttonVariant = {
+  rest: {
+    display: 'none',
+    opacity: 0,
+    height:'0px'
+  },
+  hover: {
+    opacity: 1,
+    display: 'block',
+    height:'100%',
+    transition: {
+      duration: '0.2',
+      type:'tween',
+      ease:'easeIn'
+    }
+  }
+
+}
+
+
+const CategoryElTransition = ({ array }) => {
+
+  let itemSortMethod = (items) => {
+    let firstItem = items[0]
+    let otherItems = items.slice(1)
+    return ({ firstItem, otherItems })
+  }
+
+
+  const opacityVariant = {
+    Initial: {
+      opacity: 0,
+    },
+    Active: {
+      opacity: 1,
+    }
+  }
+
+ 
+
+  let [enteringArray, setEnteringArray] = useState([])
+  let [active, setActive] = useState(false)
+
+  useEffect(() => {
+
+    setTimeout(() => {
+      setActive(true)
+      setEnteringArray(array)
+    }, 300)
+    setActive(false)
+  }, [array])
+
+
+  return (
+
+    <>
+      <motion.span
+        variants={opacityVariant}
+        animate={(active) ? 'Active' : 'Initial'}
+        initial="Initial"
+        transition={{ duration: (active ? 0.2 : 0) }}
+
+      >
+
+        <Flex p="3" h="100%" w="100%" flexDir={['column','column','row','row']}>
+
+          {
+            <>
+              {enteringArray.length && <Box flexBasis={'50%'}  position="relative" mb={["4","4","0","0"]}>
+<FirstElement src={itemSortMethod(enteringArray).firstItem.image}/>
+             
+              </Box>
+              }
+              <Box ml={["0","0","4","4"]} flexBasis={'50%'}>
+                {
+                  enteringArray.length &&
+                  <Grid h="100%" templateColumns={["repeat(1,1fr)","repeat(1,1fr)","repeat(2,1fr)","repeat(2,1fr)"]} gap="4">
+                    {
+                      itemSortMethod(enteringArray).otherItems.map((val, index) => (
+                        <SmallBox image={val.image} />
+
+                      ))
+                    }
+
+                  </Grid>
+                }
+
+              </Box>
+            </>
+          }
+
+        </Flex>
+
+      </motion.span>
+
+    </>
+
+  )
+}
+
+export default CategoryElTransition
+
+let FirstElement =  ({src})=>((
+  <>
+
+    <motion.div
+
+      initial="rest" whileHover={'hover'}   animate="rest">
+  <Image borderRadius="10px" src={src} objectFit="cover" width="100%" height="100%" />
+  <VStack  w="100%" h="100%" position={'absolute'} top="0" justifyContent={'flex-end'}>
+  
+
+    <VStack spacing={spacingOfElementsInOverlay} textAlign="center" borderBottomRadius="10px" w="100%" bg="gray.50" py={["2","2","4","4"]}>
+            <motion.div
+
+              variants={textVariant}
+            >
+              <Text fontWeight="semibold" fontSize={['11','12','md','lg']}>Bespoke</Text>
+              <Text fontSize={['9','10','11','sm']}>The Best Perfume ever</Text>
+            </motion.div>
+
+            <motion.div
+
+              variants={buttonVariant}
+            >
+              <Button colorScheme={'red'} h={["5","5","100%",'100%']}  fontSize={["9","9","10","sm"]} size="sm"> Buy</Button>
+
+            </motion.div>
+
+          </VStack>
+
+
+  </VStack>
+      </motion.div>
+  
+  </>
+
+))
+
+
+
+let SmallBox = ({ image }) => {
+
+
+  return (
+    <motion.div
+
+      initial="rest" whileHover={'hover'} whileFocus={'hover'} animate="rest">
+      <Box borderRadius="10px" position="relative">
+        <Image src={image} borderRadius="10px" boxSize="100%"
+          objectFit="cover"
+        />
+
+        <VStack  w="100%" h="100%" position={'absolute'} top="0" justifyContent={'flex-end'}>
+
+
+
+          <VStack spacing={spacingOfElementsInOverlay} textAlign="center" borderBottomRadius="10px" w="100%" bg="gray.50" py={["2","2","4","4"]}>
+            <motion.div
+
+              variants={textVariant}
+            >
+              <Text fontWeight="semibold" fontSize={['11','12','md','lg']}>Bespoke</Text>
+              <Text fontSize={['9','10','11','sm']}>The Best Perfume ever</Text>
+            </motion.div>
+
+            <motion.div
+
+              variants={buttonVariant}
+            >
+              <Button colorScheme={'red'} fontSize={["9","9","10","sm"]} h={["5","5","100%",'100%']} size="sm"> Buy</Button>
+
+            </motion.div>
+
+          </VStack>
+
+
+
+
+
+        </VStack>
+
+      </Box>
+
+    </motion.div>
+
+  )
+}

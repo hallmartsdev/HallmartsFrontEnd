@@ -1,0 +1,1 @@
+export const btnFontSize = 11

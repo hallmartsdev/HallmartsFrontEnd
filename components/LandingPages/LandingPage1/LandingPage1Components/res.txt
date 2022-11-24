@@ -1,0 +1,91 @@
+import { Box, Flex, Stack, HStack, VStack, Text, Heading, Input, Button, Image, Select } from "@chakra-ui/react"
+import { centerFlex } from '../../../../constants'
+import { capitalizeSentence } from "../../../../config"
+import { useEffect, useState } from "react"
+import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
+
+const incomingArray = [{ image: 'Landing/control.jpg', caption: 'Connect Your Products With Customers' },
+{ image: 'Landing/campus.png', caption: 'Any campus can see your products' },
+{ image: 'Landing/pic (3).jpeg', caption: 'Start promoting your business brand on campus' },
+{ image: 'Landing/digital.jpeg', caption: 'Start your digital marketing experience on campus' },
+{ image: 'Landing/manage.jpeg', caption: 'Mangage sponsors businesses on campus' },
+{ image: 'Landing/models.jpeg', caption: 'Connect small businesses with campus models' },
+{ image: 'Landing/customer.jpeg', caption: 'Customer feedback and product market value' },
+{ image: 'Landing/analytics.jpeg', caption: 'Inventory dashboard to track sales, orders and customer feedback' },
+{ image: 'Landing/price.png', caption: 'Have control over price and other product attributes from anywhere at anytime on campus' },
+{ image: 'Landing/feedback.jpg', caption: 'Get direct feedback on sales, customer feedback and order summary' },
+]
+
+const ImageChanger = () => {
+    const [indexOfElement, setIndexOfElement] = useState(0)
+    const [indexOfText, setIndexOfText] = useState(0)
+    const [fade, setFade] = useState(true)
+    const [textFade, setTextFade] = useState(true)
+    
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (indexOfElement != (incomingArray.length - 1)) {
+                setIndexOfElement(indexOfElement + 1)
+            } else {
+                setIndexOfElement(0)
+            }
+        }, 6000)
+    },[indexOfElement])
+
+    useEffect(() => {
+       const timeoutTransitionSequence = ()=>{
+       
+        setTimeout(() => {
+            setFade(false)
+            setIndexOfText(indexOfElement)
+
+            setTimeout(()=>{
+                setTextFade(false)
+            },500)
+            setTextFade(true)
+            
+        }, 700)
+        setFade(true)
+       }
+
+       timeoutTransitionSequence()
+       
+    }, [indexOfElement])
+    return (
+        <Box className={(fade) ? "fade" : ""} h={["400px","400px","500px","100vh"]} flexBasis={'60%'} position="relative">
+            <Image src={incomingArray[indexOfElement].image}  objectFit="cover" w="100%" h={["400px","400px","500px","100vh"]}></Image>
+            <Box bg="blackAlpha.500" position={'absolute'} top="0" w="100%" h="100%"></Box>
+            <Stack position={'absolute'} top="0" {...centerFlex} w="100%" h="100%">
+                <Box w="90%" color="white">
+                    <Text h="6"></Text>
+                    <Box mb="4">
+                            <Text className={(textFade) ? "fade" : ""} fontSize={['xl','3xl','5xl']}>{
+                            capitalizeSentence(incomingArray[indexOfText].caption)
+                            }</Text>
+                    </Box>
+                    <CarouselButton indexIncoming={indexOfElement} setIndexOfElement={setIndexOfElement}/>
+                </Box>
+            </Stack>
+        </Box>
+    )
+}
+
+
+export default ImageChanger
+
+const CarouselButton = ({ indexIncoming,setIndexOfElement }) => {
+
+    return (
+        <HStack>
+            {
+                incomingArray.map((val, index) => (
+                    <Box key={index}  p={["1.5","1.5","2","2"]} bg={(indexIncoming == index) ? "red" : "white"} borderRadius={'full'}></Box>
+                ))
+            }
+
+        </HStack>
+    )
+}
